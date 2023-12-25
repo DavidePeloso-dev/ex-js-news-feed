@@ -6,8 +6,8 @@ const articles = [
         author: 'Diana Rossi',
         published: new Date('2023-02-11'),
         image: 'rubber-duck.jpg',
-        alt: 'big yellow rubber duck'
-        
+        alt: 'big yellow rubber duck',
+        id: 'duck'
     },
     {
         title: 'Esplorando le profondità marine: il mistero degli abissi',
@@ -16,7 +16,8 @@ const articles = [
         author: 'Fabio Mari',
         published: new Date('2023-03-14'),
         image: 'deep-sea.jpg',
-        alt: 'deep sea'        
+        alt: 'deep sea',
+        id: 'sea'       
     },
     {
         title: 'Viaggio culinario: alla ricerca dei sapori perduti',
@@ -25,7 +26,8 @@ const articles = [
         author: 'Marta Bianchi',
         published: new Date('2023-04-20'),
         image: 'kitchen-food.jpg',
-        alt: 'food'        
+        alt: 'food',
+        id: 'food'
     },
     {
         title: 'Arte moderna: oltre i confini convenzionali',
@@ -34,7 +36,8 @@ const articles = [
         author: 'Gabriele Neri',
         published: new Date('2023-05-29'),
         image: 'modern-art.jpg',
-        alt: 'street art'
+        alt: 'street art',
+        id: 'art'
     },
 ]
 
@@ -49,7 +52,7 @@ articles.forEach(article => {
     const year = article.published.getFullYear();
 
     const articleMarckUp = 
-    `<div class="col mb-5">
+    `<div id="${article.id}" class="col mb-5">
         <div class="card rounded-0">
             <div class="card-body">
                 <div class="d-flex justify-content-between gap-3">
@@ -73,3 +76,13 @@ articles.forEach(article => {
 
     articleRowEl.insertAdjacentHTML('beforeend', articleMarckUp);
 })
+
+const geo = articles.filter(article => article.tags.includes('geo'));
+
+const travel = articles.filter(article => article.tags.includes('viaggi'));
+
+const kitchen = articles.filter(article => article.tags.includes('cucina'));
+
+const tech = articles.filter(article => article.tags.includes('tech'));
+
+const art = articles.filter(article => article.tags.includes('arte'));
