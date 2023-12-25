@@ -1,3 +1,4 @@
+//declare articles object
 const articles = [
     {
         title: 'Scoperta di una nuova specie di papera di gomma',
@@ -40,36 +41,35 @@ const articles = [
         id: 'art'
     },
 ]
-
+//declare the articles wrapper
 const articleRowEl= document.getElementById('articleRow');
 
-printArticles(articles)
+//call function for print articles
+printArticles(articles);
 
-const articlesSaved =[]
+//declare a support array
+const articlesSaved =[];
 
-const bookmarks = document.querySelectorAll('.fa-bookmark');
-
-function clickToSaveArticle(){
-bookmarks.forEach((bookmark, i) => 
-bookmark.addEventListener('click', function(){
-    this.classList.remove('fa-regular');
-    this.classList.add('fa-solid');
-    if(!articlesSaved.includes(articles[i])){
-    articlesSaved.push(articles[i])
+//add a listener to the dom with target the icon tag
+document.addEventListener('click', e => {
+    const target = e.target;
+    if(target.matches("i")){
+        target.classList.add('fa-solid');
+        target.classList.remove('fa-regular');
     }
-    console.log(articlesSaved);
-}))}
-clickToSaveArticle();
+});
 
+//devide the articles for tags
 const geo = articles.filter(article => article.tags.includes('geo'));
 const travel = articles.filter(article => article.tags.includes('viaggi'));
 const kitchen = articles.filter(article => article.tags.includes('cucina'));
 const tech = articles.filter(article => article.tags.includes('tech'));
 const art = articles.filter(article => article.tags.includes('arte'));
 
-
-
+//declare the select for the tags
 const selectTags = document.getElementById('select-tags');
+
+//listener for filtering the articles
 selectTags.addEventListener('change', function(){
     if(selectTags.value == '3'){
         printArticles(art);
@@ -86,7 +86,6 @@ selectTags.addEventListener('change', function(){
     } else {
         printArticles(articles);
     };
-
 });
 
 /**
