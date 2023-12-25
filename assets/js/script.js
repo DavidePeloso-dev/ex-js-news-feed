@@ -1,7 +1,7 @@
 const articles = [
     {
         title: 'Scoperta di una nuova specie di papera di gomma',
-        content: 'Scoperta di una nuova specie di papera di gomma.',
+        content: 'Un breve articolo sulla recente scoperta di una specie di papera di gomma mai vista prima.',
         tags: ['geo', 'tech'],
         author: 'Diana Rossi',
         published: new Date('2023-02-11'),
@@ -11,7 +11,7 @@ const articles = [
     },
     {
         title: 'Esplorando le profondità marine: il mistero degli abissi',
-        content: 'Esplorando le profondità marine: il mistero degli abissi',
+        content: "un viaggio nelle profondità dell'oceano alla scoperta di creature misteriose e inesplorate",
         tags: ['viaggi', 'geo'],
         author: 'Fabio Mari',
         published: new Date('2023-03-14'),
@@ -37,3 +37,59 @@ const articles = [
         alt: 'street art'
     },
 ]
+
+const articleRowEl= document.getElementById('articleRow');
+
+
+
+articles.forEach(article => {
+
+    const day = article.published.getDate();
+    const month = (article.published.getMonth()+1);
+    const year = article.published.getFullYear();
+
+    const badges = articles.map(article => {
+        return article.tags
+    })
+
+    console.log(badges);
+
+    const articleMarckUp = 
+    `<div class="col mb-5">
+        <div class="card rounded-0">
+            <div class="card-body">
+                <div class="d-flex justify-content-between gap-3">
+                    <h3 class="card-title">${article.title}</h3>
+                    <i class="fa-solid fa-bookmark fa-xl pt-3"></i>
+                </div>
+                <h6 class="card-subtitle">Pubblicato da ${article.author}</h6>
+                <p class="card-text text-body-secondary">In data ${day+ '/' + (month < 10 ? '0' + month : month) + '/' + year}</p>
+                <p class="card-text">${article.content}</p>
+            </div>
+            <img src="./images/${article.image}" class="px-3" alt="${article.alt}">
+            <div id="tags" class="p-3">
+            ${article.tags.map(tag =>
+                `<span class="badge bg-secondary p-2 me-2">${tag}</span>`
+            ).join('')}
+            </div>
+        </div>
+    </div>`;
+
+    console.log(articleMarckUp);
+
+    articleRowEl.insertAdjacentHTML('beforeend', articleMarckUp);
+
+/*     const tagsEl = document.querySelectorAll('#tags');
+    badges.forEach((tags) => {
+        console.log(tags);
+        tags.forEach((tag) => {
+            console.log(tag);
+            tagsEl.forEach(el => {
+                const badgeEl = `<span class="badge bg-secondary p-2 me-3">${tag}</span>`
+                el.insertAdjacentHTML('beforeend', badgeEl);
+            })
+        })
+    })
+   
+    console.log(tagsEl); */
+})
