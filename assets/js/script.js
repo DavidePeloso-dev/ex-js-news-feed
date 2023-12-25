@@ -48,12 +48,6 @@ articles.forEach(article => {
     const month = (article.published.getMonth()+1);
     const year = article.published.getFullYear();
 
-    const badges = articles.map(article => {
-        return article.tags
-    })
-
-    console.log(badges);
-
     const articleMarckUp = 
     `<div class="col mb-5">
         <div class="card rounded-0">
@@ -69,7 +63,7 @@ articles.forEach(article => {
             <img src="./images/${article.image}" class="px-3" alt="${article.alt}">
             <div id="tags" class="p-3">
             ${article.tags.map(tag =>
-                `<span class="badge bg-secondary p-2 me-2">${tag}</span>`
+                `<span class="badge ${tag} p-2 me-2">${tag}</span>`
             ).join('')}
             </div>
         </div>
@@ -78,18 +72,4 @@ articles.forEach(article => {
     console.log(articleMarckUp);
 
     articleRowEl.insertAdjacentHTML('beforeend', articleMarckUp);
-
-/*     const tagsEl = document.querySelectorAll('#tags');
-    badges.forEach((tags) => {
-        console.log(tags);
-        tags.forEach((tag) => {
-            console.log(tag);
-            tagsEl.forEach(el => {
-                const badgeEl = `<span class="badge bg-secondary p-2 me-3">${tag}</span>`
-                el.insertAdjacentHTML('beforeend', badgeEl);
-            })
-        })
-    })
-   
-    console.log(tagsEl); */
 })
