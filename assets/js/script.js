@@ -47,9 +47,6 @@ const articleRowEl= document.getElementById('articleRow');
 //call function for print articles
 printArticles(articles);
 
-//declare a support array
-const savedArticlesId =[];
-
 //declare support array
 const savedArticles = [];
 
