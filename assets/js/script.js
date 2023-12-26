@@ -48,16 +48,34 @@ const articleRowEl= document.getElementById('articleRow');
 printArticles(articles);
 
 //declare a support array
-const articlesSaved =[];
+const savedArticlesId =[];
+
+//declare support array
+const savedArticles = [];
 
 //add a listener to the dom with target the icon tag
 document.addEventListener('click', e => {
     const target = e.target;
+    console.log(e);
+    const articleId = target.offsetParent.id;
     if(target.matches("i")){
         target.classList.add('fa-solid');
         target.classList.remove('fa-regular');
+        if(!savedArticlesId.includes(articleId)){
+            savedArticlesId.push(articleId)
+
+            savedArticlesId.forEach(id => {
+                articles.forEach((article) => {
+                    if(article.id === id && !savedArticles.includes(article)){
+                        savedArticles.push(article)
+                        console.log(savedArticles);
+                    }
+                })
+            })
+        }
     }
 });
+
 
 //devide the articles for tags
 const geo = articles.filter(article => article.tags.includes('geo'));
@@ -70,22 +88,64 @@ const art = articles.filter(article => article.tags.includes('arte'));
 const selectTags = document.getElementById('select-tags');
 
 //listener for filtering the articles
+function filtering(){
 selectTags.addEventListener('change', function(){
-    if(selectTags.value == '3'){
+    if(selectTags.value == 'art'){
         printArticles(art);
-    } else if(selectTags.value == '4'){
+        savedArticlesBookMark(art);
+        checked();
+    } else if(selectTags.value == 'travel'){
         printArticles(travel);
-    } else if(selectTags.value == '5'){
+        savedArticlesBookMark(travel);
+        checked();
+    } else if(selectTags.value == 'tech'){
         printArticles(tech);
-    } else if (selectTags.value == '6'){
+        savedArticlesBookMark(tech);
+        checked();
+    } else if (selectTags.value == 'geo'){
         printArticles(geo);
-    } else if(selectTags.value == '7'){
+        savedArticlesBookMark(geo);
+        checked();
+    } else if(selectTags.value == 'kitchen'){
         printArticles(kitchen);
-    } else if(selectTags.value == '2'){
+        savedArticlesBookMark(kitchen);
+        checked();
+    } else if(selectTags.value == 'politics'){
         articleRowEl.innerHTML = '<h2 class="text-white">No news available.</h2>';
     } else {
         printArticles(articles);
+        savedArticlesBookMark(articles);
+        checked();
     };
+})};
+
+filtering()
+
+let list = [];
+
+//declare the checkbox
+const savedCheckBox = document.getElementById('savedCheck');
+
+savedCheckBox.addEventListener('change', () => {
+    let position
+    if(selectTags.value == 'articles'){
+        position = articles
+    }else if(selectTags.value == 'art'){
+       position = art
+    }else if(selectTags.value == 'kitchen'){
+        position = kitchen
+    }else if(selectTags.value == 'geo'){
+        position = geo
+    }else if(selectTags.value == 'tech'){
+        position = tech
+    }else if(selectTags.value == 'travel'){
+        position = travel
+    }
+
+
+    printArticles(position);
+    savedArticlesBookMark(position);
+    checked();
 });
 
 /**
@@ -101,19 +161,19 @@ function printArticles(articles){
         const year = article.published.getFullYear();
     
         const articleMarkUp = 
-        `<div id="${article.id}" class="col mb-5">
-            <div class="card rounded-0">
+        `<div class="col mb-5">
+            <div id="${article.id}" class="card rounded-0">
                 <div class="card-body">
                     <div class="d-flex justify-content-between gap-3">
                         <h3 class="card-title">${article.title}</h3>
-                        <i class="fa-regular fa-bookmark fa-xl pt-3"></i>
+                        <i class="fa-regular fa-bookmark fa-xl pt-3" data-tags="${article.tags.join(' ')}"></i>
                     </div>
                     <h6 class="card-subtitle">Pubblicato da ${article.author}</h6>
                     <p class="card-text text-body-secondary">In data ${day+ '/' + (month < 10 ? '0' + month : month) + '/' + year}</p>
                     <p class="card-text">${article.content}</p>
                 </div>
                 <img src="./images/${article.image}" class="px-3" alt="${article.alt}">
-                <div id="tags" class="p-3">
+                <div class="p-3">
                 ${article.tags.map(tag =>
                     `<span class="badge ${tag} p-2 me-2">${tag}</span>`
                 ).join('')}
@@ -125,3 +185,30 @@ function printArticles(articles){
     
         articleRowEl.insertAdjacentHTML('beforeend', articleMarkUp);
     })}
+    
+    // print only saved articles
+    function checked(){
+    if(savedCheckBox.checked){
+        printArticles(list)
+        savedArticlesBookMark(list)
+        if(articleRowEl.innerHTML == ''){
+            articleRowEl.innerHTML = '<h2 class="text-white">No news available.</h2>';
+        };
+    }}
+
+    // print the correct bookmark
+    function savedArticlesBookMark(el){
+        list = savedArticles.filter(article => el.includes(article))
+        list.forEach(article => {
+        const fullArticle = document.getElementById(`${article.id}`);
+        const articleCildren = fullArticle.childNodes;
+        const articleCildrenX2 = articleCildren[1].childNodes;
+        const articleCildrenX4 = articleCildrenX2[1].childNodes;
+        articleCildrenX4.forEach(cildren => {
+            if(cildren.nodeName =="I" ){
+                cildren.classList.remove('fa-regular');
+                cildren.classList.add('fa-solid');
+            }
+        })
+       })
+    }
