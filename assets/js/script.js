@@ -57,25 +57,26 @@ const savedArticles = [];
 document.addEventListener('click', e => {
     const target = e.target;
     console.log(e);
-    const articleId = target.offsetParent.id;
+    const articleId = target.dataset.id;
     if(target.matches("i")){
-        target.classList.add('fa-solid');
-        target.classList.remove('fa-regular');
-        if(!savedArticlesId.includes(articleId)){
-            savedArticlesId.push(articleId)
-
-            savedArticlesId.forEach(id => {
-                articles.forEach((article) => {
-                    if(article.id === id && !savedArticles.includes(article)){
-                        savedArticles.push(article)
-                        console.log(savedArticles);
-                    }
-                })
-            })
-        }
+        target.classList.toggle('fa-solid');
+        target.classList.toggle('fa-regular');
+       
+        articles.forEach(article => {
+            if(article.id === articleId){
+                if(!savedArticles.includes(article)){
+                    console.log(article.id, articleId);
+                    savedArticles.push(article)
+                }else{
+                    const index = savedArticles.indexOf(article);
+                    savedArticles.splice(index, 1)
+                    refresh()
+                }
+            }
+        })
+           
     }
 });
-
 
 //devide the articles for tags
 const geo = articles.filter(article => article.tags.includes('geo'));
@@ -88,7 +89,6 @@ const art = articles.filter(article => article.tags.includes('arte'));
 const selectTags = document.getElementById('select-tags');
 
 //listener for filtering the articles
-function filtering(){
 selectTags.addEventListener('change', function(){
     if(selectTags.value == 'art'){
         printArticles(art);
@@ -117,35 +117,16 @@ selectTags.addEventListener('change', function(){
         savedArticlesBookMark(articles);
         checked();
     };
-})};
+});
 
-filtering()
-
+//declare a support array
 let list = [];
 
 //declare the checkbox
 const savedCheckBox = document.getElementById('savedCheck');
 
 savedCheckBox.addEventListener('change', () => {
-    let position
-    if(selectTags.value == 'articles'){
-        position = articles
-    }else if(selectTags.value == 'art'){
-       position = art
-    }else if(selectTags.value == 'kitchen'){
-        position = kitchen
-    }else if(selectTags.value == 'geo'){
-        position = geo
-    }else if(selectTags.value == 'tech'){
-        position = tech
-    }else if(selectTags.value == 'travel'){
-        position = travel
-    }
-
-
-    printArticles(position);
-    savedArticlesBookMark(position);
-    checked();
+    refresh()
 });
 
 /**
@@ -166,13 +147,13 @@ function printArticles(articles){
                 <div class="card-body">
                     <div class="d-flex justify-content-between gap-3">
                         <h3 class="card-title">${article.title}</h3>
-                        <i class="fa-regular fa-bookmark fa-xl pt-3" data-tags="${article.tags.join(' ')}"></i>
+                        <i class="fa-regular fa-bookmark fa-xl pt-3" data-id="${article.id}"></i>
                     </div>
                     <h6 class="card-subtitle">Pubblicato da ${article.author}</h6>
                     <p class="card-text text-body-secondary">In data ${day+ '/' + (month < 10 ? '0' + month : month) + '/' + year}</p>
                     <p class="card-text">${article.content}</p>
                 </div>
-                <img src="./images/${article.image}" class="px-3" alt="${article.alt}">
+                <img src="./assets/images/${article.image}" class="px-3" alt="${article.alt}">
                 <div class="p-3">
                 ${article.tags.map(tag =>
                     `<span class="badge ${tag} p-2 me-2">${tag}</span>`
@@ -184,31 +165,57 @@ function printArticles(articles){
         console.log(articleMarkUp);
     
         articleRowEl.insertAdjacentHTML('beforeend', articleMarkUp);
-    })}
+    })
+}
     
-    // print only saved articles
-    function checked(){
-    if(savedCheckBox.checked){
-        printArticles(list)
-        savedArticlesBookMark(list)
-        if(articleRowEl.innerHTML == ''){
-            articleRowEl.innerHTML = '<h2 class="text-white">No news available.</h2>';
-        };
-    }}
+/**
+ * ## Print only saved articles
+ */
+function checked(){
+if(savedCheckBox.checked){
+    printArticles(list)
+    savedArticlesBookMark(list)
+    if(articleRowEl.innerHTML == ''){
+        articleRowEl.innerHTML = '<h2 class="text-white">No news available.</h2>';
+    };
+}}
 
-    // print the correct bookmark
-    function savedArticlesBookMark(el){
-        list = savedArticles.filter(article => el.includes(article))
-        list.forEach(article => {
-        const fullArticle = document.getElementById(`${article.id}`);
-        const articleCildren = fullArticle.childNodes;
-        const articleCildrenX2 = articleCildren[1].childNodes;
-        const articleCildrenX4 = articleCildrenX2[1].childNodes;
-        articleCildrenX4.forEach(cildren => {
-            if(cildren.nodeName =="I" ){
-                cildren.classList.remove('fa-regular');
-                cildren.classList.add('fa-solid');
+/**
+ * ## Print the correct bookmark
+ * @param {Array} el list to verify 
+ */
+function savedArticlesBookMark(el){
+    list = savedArticles.filter(article => el.includes(article))
+    list.forEach(article => {
+        const bookmarks = document.querySelectorAll('.fa-bookmark');
+        bookmarks.forEach(bookmark => {
+            if(bookmark.dataset.id == article.id){
+                bookmark.classList.remove('fa-regular');
+                bookmark.classList.add('fa-solid');
             }
         })
-       })
+    })
+}
+
+/**
+ * ## Refresh all page
+ */
+function refresh(){
+    let position;
+    if(selectTags.value == 'articles'){
+        position = articles
+    }else if(selectTags.value == 'art'){
+       position = art
+    }else if(selectTags.value == 'kitchen'){
+        position = kitchen
+    }else if(selectTags.value == 'geo'){
+        position = geo
+    }else if(selectTags.value == 'tech'){
+        position = tech
+    }else if(selectTags.value == 'travel'){
+        position = travel
     }
+    printArticles(position);
+    savedArticlesBookMark(position);
+    checked();
+}
