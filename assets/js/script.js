@@ -40,7 +40,8 @@ const articles = [
         alt: 'street art',
         id: 'art'
     },
-]
+];
+
 //declare the articles wrapper
 const articleRowEl= document.getElementById('articleRow');
 
@@ -58,20 +59,18 @@ document.addEventListener('click', e => {
     if(target.matches("i")){
         target.classList.toggle('fa-solid');
         target.classList.toggle('fa-regular');
-       
         articles.forEach(article => {
             if(article.id === articleId){
                 if(!savedArticles.includes(article)){
                     console.log(article.id, articleId);
-                    savedArticles.push(article)
+                    savedArticles.push(article);
                 }else{
                     const index = savedArticles.indexOf(article);
-                    savedArticles.splice(index, 1)
-                    refresh()
+                    savedArticles.splice(index, 1);
+                    refresh();
                 }
             }
-        })
-           
+        })   
     }
 });
 
@@ -88,20 +87,17 @@ const selectTags = document.getElementById('select-tags');
 //listener for filtering the articles
 selectTags.addEventListener('change', function(){
     if(selectTags.value != 'politics'){
-        refresh()
+        refresh();
     }else {
         articleRowEl.innerHTML = '<h2 class="text-white">No news available.</h2>';
     }
 });
 
-//declare a support array
-let list = [];
-
 //declare the checkbox
 const savedCheckBox = document.getElementById('savedCheck');
 
 savedCheckBox.addEventListener('change', () => {
-    refresh()
+    refresh();
 });
 
 /**
@@ -142,14 +138,17 @@ function printArticles(articles){
         articleRowEl.insertAdjacentHTML('beforeend', articleMarkUp);
     })
 }
-    
+
+//declare a support array
+let list = [];
+
 /**
  * ## Print only saved articles
  */
 function checked(){
 if(savedCheckBox.checked){
-    printArticles(list)
-    savedArticlesBookMark(list)
+    printArticles(list);
+    savedArticlesBookMark(list);
     if(articleRowEl.innerHTML == ''){
         articleRowEl.innerHTML = '<h2 class="text-white">No news available.</h2>';
     };
@@ -160,7 +159,7 @@ if(savedCheckBox.checked){
  * @param {Array} el list to verify 
  */
 function savedArticlesBookMark(el){
-    list = savedArticles.filter(article => el.includes(article))
+    list = savedArticles.filter(article => el.includes(article));
     list.forEach(article => {
         const bookmarks = document.querySelectorAll('.fa-bookmark');
         bookmarks.forEach(bookmark => {
@@ -178,17 +177,17 @@ function savedArticlesBookMark(el){
 function refresh(){
     let position;
     if(selectTags.value == 'articles'){
-        position = articles
+        position = articles;
     }else if(selectTags.value == 'art'){
-       position = art
+       position = art;
     }else if(selectTags.value == 'kitchen'){
-        position = kitchen
+        position = kitchen;
     }else if(selectTags.value == 'geo'){
-        position = geo
+        position = geo;
     }else if(selectTags.value == 'tech'){
-        position = tech
+        position = tech;
     }else if(selectTags.value == 'travel'){
-        position = travel
+        position = travel;
     }
     printArticles(position);
     savedArticlesBookMark(position);
