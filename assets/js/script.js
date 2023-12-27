@@ -87,33 +87,11 @@ const selectTags = document.getElementById('select-tags');
 
 //listener for filtering the articles
 selectTags.addEventListener('change', function(){
-    if(selectTags.value == 'art'){
-        printArticles(art);
-        savedArticlesBookMark(art);
-        checked();
-    } else if(selectTags.value == 'travel'){
-        printArticles(travel);
-        savedArticlesBookMark(travel);
-        checked();
-    } else if(selectTags.value == 'tech'){
-        printArticles(tech);
-        savedArticlesBookMark(tech);
-        checked();
-    } else if (selectTags.value == 'geo'){
-        printArticles(geo);
-        savedArticlesBookMark(geo);
-        checked();
-    } else if(selectTags.value == 'kitchen'){
-        printArticles(kitchen);
-        savedArticlesBookMark(kitchen);
-        checked();
-    } else if(selectTags.value == 'politics'){
+    if(selectTags.value != 'politics'){
+        refresh()
+    }else {
         articleRowEl.innerHTML = '<h2 class="text-white">No news available.</h2>';
-    } else {
-        printArticles(articles);
-        savedArticlesBookMark(articles);
-        checked();
-    };
+    }
 });
 
 //declare a support array
