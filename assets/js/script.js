@@ -157,9 +157,9 @@ function savedArticlesBookMark(arr){
             if(bookmark.dataset.id == article.id){
                 bookmark.classList.remove('fa-regular');
                 bookmark.classList.add('fa-solid');
-            }
-        })
-    })
+            };
+        });
+    });
 };
 
 /**
@@ -169,10 +169,18 @@ function checked(){
 if(savedCheckBox.checked){
     printArticles(list);
     savedArticlesBookMark(list);
-    if(articleRowEl.innerHTML == ''){
+    elementsNotFound();
+}};
+
+/**
+ * ## Print a message if the elements are not found
+ */
+function elementsNotFound(){
+    // if empty print not founds
+    if(articleRowEl.innerHTML == ""){
         articleRowEl.innerHTML = '<h2 class="text-white">No news available.</h2>';
     };
-}};
+};
 
 /**
  * ## Refresh all article page
@@ -195,8 +203,5 @@ function refresh(){
     printArticles(position);
     savedArticlesBookMark(position);
     checked();
-    // if empty print not found
-    if(articleRowEl.innerHTML == ""){
-        articleRowEl.innerHTML = '<h2 class="text-white">No news available.</h2>';
-    };
+    elementsNotFound()
 };
