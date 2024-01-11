@@ -56,15 +56,19 @@ document.addEventListener('click', e => {
     const target = e.target;
     console.log(e);
     const articleId = target.dataset.id;
+    //verify if the target match the bookmark
     if(target.matches("i")){
         target.classList.toggle('fa-solid');
         target.classList.toggle('fa-regular');
         articles.forEach(article => {
+            //select the article selected
             if(article.id === articleId){
+                //push the article if not included
                 if(!savedArticles.includes(article)){
                     console.log(article.id, articleId);
                     savedArticles.push(article);
                 }else{
+                    //delete the article if included
                     const index = savedArticles.indexOf(article);
                     savedArticles.splice(index, 1);
                     refresh();
@@ -86,32 +90,31 @@ const selectTags = document.getElementById('select-tags');
 
 //listener for filtering the articles
 selectTags.addEventListener('change', function(){
-    if(selectTags.value != 'politics'){
-        refresh();
-    }else {
-        articleRowEl.innerHTML = '<h2 class="text-white">No news available.</h2>';
-    }
+    refresh();
 });
 
 //declare the checkbox
 const savedCheckBox = document.getElementById('savedCheck');
 
+//listener for filtering the saved articles
 savedCheckBox.addEventListener('change', () => {
     refresh();
 });
 
 /**
  * ## Stampa oggetti sul DOM
- * @param {Array} articles array di oggetti da stampare sul DOM
+ * @param {Array} arr array di oggetti da stampare sul DOM
  */
-function printArticles(articles){
+function printArticles(arr){
     articleRowEl.innerHTML = '';
-    articles.forEach(article => {
-    
+    arr.forEach(article => {
+
+        //declare the elements of the published date
         const day = article.published.getDate();
         const month = (article.published.getMonth()+1);
         const year = article.published.getFullYear();
-    
+
+        //declare the article stucture
         const articleMarkUp = 
         `<div class="col mb-5">
             <div id="${article.id}" class="card rounded-0">
@@ -134,13 +137,30 @@ function printArticles(articles){
         </div>`;
     
         console.log(articleMarkUp);
-    
+        //print the articles in the dom              
         articleRowEl.insertAdjacentHTML('beforeend', articleMarkUp);
     })
-}
+};
 
 //declare a support array
 let list = [];
+
+/**
+ * ## Print the correct bookmark
+ * @param {Array} arr list to verify 
+ */
+function savedArticlesBookMark(arr){
+    list = savedArticles.filter(article => arr.includes(article));
+    list.forEach(article => {
+        const bookmarks = document.querySelectorAll('.fa-bookmark');
+        bookmarks.forEach(bookmark => {
+            if(bookmark.dataset.id == article.id){
+                bookmark.classList.remove('fa-regular');
+                bookmark.classList.add('fa-solid');
+            }
+        })
+    })
+};
 
 /**
  * ## Print only saved articles
@@ -152,30 +172,13 @@ if(savedCheckBox.checked){
     if(articleRowEl.innerHTML == ''){
         articleRowEl.innerHTML = '<h2 class="text-white">No news available.</h2>';
     };
-}}
+}};
 
 /**
- * ## Print the correct bookmark
- * @param {Array} el list to verify 
- */
-function savedArticlesBookMark(el){
-    list = savedArticles.filter(article => el.includes(article));
-    list.forEach(article => {
-        const bookmarks = document.querySelectorAll('.fa-bookmark');
-        bookmarks.forEach(bookmark => {
-            if(bookmark.dataset.id == article.id){
-                bookmark.classList.remove('fa-regular');
-                bookmark.classList.add('fa-solid');
-            }
-        })
-    })
-}
-
-/**
- * ## Refresh all page
+ * ## Refresh all article page
  */
 function refresh(){
-    let position;
+    let position = [];
     if(selectTags.value == 'articles'){
         position = articles;
     }else if(selectTags.value == 'art'){
@@ -192,4 +195,8 @@ function refresh(){
     printArticles(position);
     savedArticlesBookMark(position);
     checked();
-}
+    // if empty print not found
+    if(articleRowEl.innerHTML == ""){
+        articleRowEl.innerHTML = '<h2 class="text-white">No news available.</h2>';
+    };
+};
