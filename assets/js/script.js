@@ -5,7 +5,7 @@ const articles = [
         content: 'Un breve articolo sulla recente scoperta di una specie di papera di gomma mai vista prima.',
         tags: ['geo', 'tech'],
         author: 'Diana Rossi',
-        published: new Date('2023-02-11'),
+        published: '2023-02-11',
         image: 'rubber-duck.jpg',
         alt: 'big yellow rubber duck',
         id: 'duck'
@@ -15,7 +15,7 @@ const articles = [
         content: "un viaggio nelle profondità dell'oceano alla scoperta di creature misteriose e inesplorate",
         tags: ['viaggi', 'geo'],
         author: 'Fabio Mari',
-        published: new Date('2023-03-14'),
+        published: '2023-03-14',
         image: 'deep-sea.jpg',
         alt: 'deep sea',
         id: 'sea'       
@@ -25,7 +25,7 @@ const articles = [
         content: 'Esplorazione di tradizioni culinarie dimenticate e la ricerca di sapori autentici.',
         tags: ['cucina'],
         author: 'Marta Bianchi',
-        published: new Date('2023-04-20'),
+        published: '2023-04-20',
         image: 'kitchen-food.jpg',
         alt: 'food',
         id: 'food'
@@ -35,7 +35,7 @@ const articles = [
         content: "Un'analisi delle tendenze e delle sfide nell'arte contemporanea, con interviste a artisti emergenti.",
         tags: ['arte', 'tech'],
         author: 'Gabriele Neri',
-        published: new Date('2023-05-29'),
+        published: '2023-05-29',
         image: 'modern-art.jpg',
         alt: 'street art',
         id: 'art'
@@ -60,30 +60,16 @@ document.addEventListener('click', e => {
     if(target.matches("i")){
         target.classList.toggle('fa-solid');
         target.classList.toggle('fa-regular');
-        articles.forEach(article => {
-            //select the article selected
-            if(article.id === articleId){
-                //push the article if not included
-                if(!savedArticles.includes(article)){
-                    console.log(article.id, articleId);
-                    savedArticles.push(article);
-                }else{
-                    //delete the article if included
-                    const index = savedArticles.indexOf(article);
-                    savedArticles.splice(index, 1);
-                    refresh();
-                }
-            }
-        })   
+        if(!savedArticles.includes(articleId)){
+            savedArticles.push(articleId);
+        }else{
+            //delete the article if included
+            const index = savedArticles.indexOf(articleId);
+            savedArticles.splice(index, 1);
+            refresh();
+        }
     }
-});
-
-//devide the articles for tags
-const geo = articles.filter(article => article.tags.includes('geo'));
-const travel = articles.filter(article => article.tags.includes('viaggi'));
-const kitchen = articles.filter(article => article.tags.includes('cucina'));
-const tech = articles.filter(article => article.tags.includes('tech'));
-const art = articles.filter(article => article.tags.includes('arte'));
+});   
 
 //declare the select for the tags
 const selectTags = document.getElementById('select-tags');
@@ -108,12 +94,7 @@ savedCheckBox.addEventListener('change', () => {
 function printArticles(arr){
     articleRowEl.innerHTML = '';
     arr.forEach(article => {
-
-        //declare the elements of the published date
-        const day = article.published.getDate();
-        const month = (article.published.getMonth()+1);
-        const year = article.published.getFullYear();
-
+    
         //declare the article stucture
         const articleMarkUp = 
         `<div class="col mb-5">
@@ -124,7 +105,7 @@ function printArticles(arr){
                         <i class="fa-regular fa-bookmark fa-xl pt-3" data-id="${article.id}"></i>
                     </div>
                     <h6 class="card-subtitle">Pubblicato da ${article.author}</h6>
-                    <p class="card-text text-body-secondary">In data ${day+ '/' + (month < 10 ? '0' + month : month) + '/' + year}</p>
+                    <p class="card-text text-body-secondary">In data ${article.published.split('-').reverse().join('/')}</p>
                     <p class="card-text">${article.content}</p>
                 </div>
                 <img src="./assets/images/${article.image}" class="px-3" alt="${article.alt}">
@@ -147,10 +128,9 @@ let list = [];
 
 /**
  * ## Print the correct bookmark
- * @param {Array} arr list to verify 
  */
-function savedArticlesBookMark(arr){
-    list = savedArticles.filter(article => arr.includes(article));
+function savedArticlesBookMark(){
+    list = articles.filter(article => savedArticles.includes(article.id));
     list.forEach(article => {
         const bookmarks = document.querySelectorAll('.fa-bookmark');
         bookmarks.forEach(bookmark => {
@@ -168,7 +148,7 @@ function savedArticlesBookMark(arr){
 function checked(){
 if(savedCheckBox.checked){
     printArticles(list);
-    savedArticlesBookMark(list);
+    savedArticlesBookMark();
     elementsNotFound();
 }};
 
@@ -187,21 +167,13 @@ function elementsNotFound(){
  */
 function refresh(){
     let position = [];
-    if(selectTags.value == 'articles'){
-        position = articles;
-    }else if(selectTags.value == 'art'){
-       position = art;
-    }else if(selectTags.value == 'kitchen'){
-        position = kitchen;
-    }else if(selectTags.value == 'geo'){
-        position = geo;
-    }else if(selectTags.value == 'tech'){
-        position = tech;
-    }else if(selectTags.value == 'travel'){
-        position = travel;
+    if(selectTags.value === 'articles'){
+        position = articles
+    }else{
+    position = articles.filter(article => article.tags.includes(selectTags.value));
     }
     printArticles(position);
-    savedArticlesBookMark(position);
+    savedArticlesBookMark();
     checked();
-    elementsNotFound()
+    elementsNotFound();
 };
