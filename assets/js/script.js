@@ -171,7 +171,9 @@ function savedArticlesBookMark(){
  */
 function checked(){
 if(savedCheckBox.checked){
-    printArticles(list);
+    const selectedArticles = filteredArticles();
+    const filteredSavedArticles = list.filter(article => selectedArticles.includes(article));
+    printArticles(filteredSavedArticles);
     savedArticlesBookMark();
     elementsNotFound();
 }};
@@ -190,14 +192,23 @@ function elementsNotFound(){
  * ## Refresh all article page
  */
 function refresh(){
+    const position = filteredArticles();
+    printArticles(position);
+    savedArticlesBookMark();
+    checked();
+    elementsNotFound();
+};
+
+/**
+ * 
+ * @returns the filtered articles by the select
+ */
+function filteredArticles(){
     let position = [];
     if(selectTags.value === 'articles'){
         position = articles
     }else{
     position = articles.filter(article => article.tags.includes(selectTags.value));
     }
-    printArticles(position);
-    savedArticlesBookMark();
-    checked();
-    elementsNotFound();
+    return position;
 };
