@@ -74,6 +74,9 @@ document.addEventListener('click', e => {
 //declare the select for the tags
 const selectTags = document.getElementById('select-tags');
 
+//popolate the select's options
+popolateSelectOption();
+
 //listener for filtering the articles
 selectTags.addEventListener('change', function(){
     refresh();
@@ -121,6 +124,27 @@ function printArticles(arr){
         //print the articles in the dom              
         articleRowEl.insertAdjacentHTML('beforeend', articleMarkUp);
     })
+};
+
+/**
+ * ## popolate the select's options
+ */
+function popolateSelectOption(){
+    let tagsList = [];
+    articles.forEach(article => {
+        article.tags.forEach(tag => {
+            if(!tagsList.includes(tag)){
+                tagsList.push(tag)
+            };
+        });
+    });
+    console.log(tagsList);
+    tagsList.forEach(tag=> {
+        const optionEl = document.createElement('option');
+        optionEl.value = tag;
+        optionEl.innerHTML = tag;
+        selectTags.insertAdjacentElement('beforeend', optionEl);
+    });
 };
 
 //declare a support array
