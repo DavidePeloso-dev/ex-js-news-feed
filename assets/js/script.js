@@ -49,7 +49,7 @@ const articleRowEl= document.getElementById('articleRow');
 printArticles(articles);
 
 //declare support array
-const savedArticles = [];
+const savedArticlesId = [];
 
 //add a listener to the dom with target the icon tag
 document.addEventListener('click', e => {
@@ -60,12 +60,12 @@ document.addEventListener('click', e => {
     if(target.matches("i")){
         target.classList.toggle('fa-solid');
         target.classList.toggle('fa-regular');
-        if(!savedArticles.includes(articleId)){
-            savedArticles.push(articleId);
+        if(!savedArticlesId.includes(articleId)){
+            savedArticlesId.push(articleId);
         }else{
             //delete the article if included
-            const index = savedArticles.indexOf(articleId);
-            savedArticles.splice(index, 1);
+            const index = savedArticlesId.indexOf(articleId);
+            savedArticlesId.splice(index, 1);
             refresh();
         }
     }
@@ -148,14 +148,14 @@ function popolateSelectOption(){
 };
 
 //declare a support array
-let list = [];
+let savedArticlesList = [];
 
 /**
  * ## Print the correct bookmark
  */
 function savedArticlesBookMark(){
-    list = articles.filter(article => savedArticles.includes(article.id));
-    list.forEach(article => {
+    savedArticlesList = articles.filter(article => savedArticlesId.includes(article.id));
+    savedArticlesList.forEach(article => {
         const bookmarks = document.querySelectorAll('.fa-bookmark');
         bookmarks.forEach(bookmark => {
             if(bookmark.dataset.id == article.id){
@@ -172,7 +172,7 @@ function savedArticlesBookMark(){
 function checked(){
 if(savedCheckBox.checked){
     const selectedArticles = filteredArticles();
-    const filteredSavedArticles = list.filter(article => selectedArticles.includes(article));
+    const filteredSavedArticles = savedArticlesList.filter(article => selectedArticles.includes(article));
     printArticles(filteredSavedArticles);
     savedArticlesBookMark();
     elementsNotFound();
